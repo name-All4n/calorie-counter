@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class FoodService {
                 Cell numberCell = row.getCell(0);
                 Cell nameCell = row.getCell(1);
 
-                if(numberCell == null || numberCell.getCellType() != CellType.NUMERIC) {
+                if(numberCell == null || numberCell.getCellType() != CellType.NUMERIC && numberCell.getCellType() != CellType.FORMULA) {
                     continue;
                 }
                 if(nameCell == null || nameCell.getCellType() != CellType.STRING) {
@@ -56,11 +57,17 @@ public class FoodService {
         };
     }
 
+    private String normalize(String s) {
+        return Normalizer.normalize(s, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toLowerCase();
+    }
+
     public List<FoodDTO> getFoods(String name) {
+        String term = normalize(name);
         return foods.stream()
-                .filter(food -> food.name()
-                        .toLowerCase()
-                        .contains(name.toLowerCase()))
+                .filter(food -> normalize(food.name())
+                        .contains(term))
                 .toList();
     }
 }

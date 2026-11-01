@@ -1,11 +1,9 @@
 package com.example.calorie_counter.controllers;
 
 import com.example.calorie_counter.DTOs.FoodDTO;
+import com.example.calorie_counter.DTOs.FoodNameDTO;
 import com.example.calorie_counter.services.FoodService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,8 +15,8 @@ public class FoodController {
         this.foodService = foodService;
     }
 
-    @GetMapping("/search")
-    public List<FoodDTO> search(@RequestParam String name){
-        return foodService.getFoods(name);
+    @PostMapping("/search")
+    public List<FoodDTO> search(@RequestBody FoodNameDTO data){
+        return foodService.getFoods(data.name());
     }
 }
