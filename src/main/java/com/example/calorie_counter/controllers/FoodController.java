@@ -17,6 +17,6 @@ public class FoodController {
 
     @PostMapping("/search")
     public List<FoodDTO> search(@RequestBody FoodNameDTO data){
-        return foodService.getFoods(data.name());
+        return foodService.getFoods(data.names());
     }
 }

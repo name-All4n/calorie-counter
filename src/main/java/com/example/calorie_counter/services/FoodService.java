@@ -63,11 +63,18 @@ public class FoodService {
                 .toLowerCase();
     }
 
-    public List<FoodDTO> getFoods(String name) {
-        String term = normalize(name);
+    public List<FoodDTO> getFoods(List<String> names) {
+        List<String> terms = names.stream()
+                .map(this::normalize).map(String::trim)
+                .filter(t -> !t.isEmpty())
+                .toList();
+
+
         return foods.stream()
-                .filter(food -> normalize(food.name())
-                        .contains(term))
+                .filter(food -> {
+                    String foodName = normalize(food.name());
+                    return terms.stream().anyMatch(foodName::contains);
+                })
                 .toList();
     }
 }
